@@ -1,0 +1,79 @@
+{{- $deploymentName := "n8n-main" }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: n8n-main-data-pv
+  namespace: n8n
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  claimRef:
+     namespace: n8n
+     name: n8n-main-data-pvc
+  hostpath:
+     path: "/mnt/data"
+  # nfs:
+  #   path: /home/user/Documents/nfs
+  #   server: 192.168.6.10
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: n8n-main-data-pvc
+  namespace: n8n
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $deploymentName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: {{ $deploymentName }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        service: {{ $deploymentName }}
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: n8n-main-data-pvc
+      restartPolicy: Always
+      containers:
+        - name: main
+          image: n8nio/n8n:{{ .Values.n8n.imageTag }}
+          args: ["start"]
+          envFrom:
+          - configMapRef:
+              name: n8n-configmap-env
+          resources:
+            limits:
+              memory: {{ .Values.resources.memoryLimit }}
+          volumeMounts:
+            - mountPath: "/data"
+              name: data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $deploymentName }}
+spec:
+  type: ClusterIP
+  selector:
+    service: {{ $deploymentName }}
+  ports:
+    - port: 5678

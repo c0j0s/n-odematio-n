@@ -1,0 +1,15 @@
+n8n:
+  imageTag: latest
+  baseDomainName: kube.8n8.io
+  encryptionKey: key
+  deploymentMode: scale # single or scale
+  storageSize: 20Gi
+  db:
+    name: n8n
+    user: n8n
+    password: n8n
+  concurrency: 5
+  replicas: 3
+
+resources:
+  memoryLimit: 0.5Gi
