@@ -1,7 +1,6 @@
 # n-odematio-n
-A custom Kubernetes Helm chart for persistent n8n a Workflow Automation Tool.
-![](https://www.andreffs.com/blog/setup-n8n-on-kubernetes/images/architecture-slide-8.png)
-> Note: persistent volume is mount at `/mnt/data` by default.  
+A custom Kubernetes Helm chart for n8n, a Workflow Automation Tool.
+> Note: persistent volume for `n8n-main` is mount at `/mnt/data` by default.  
 > See `templates\n8n-main.yaml` for more detail.
 
 ## Procedures
