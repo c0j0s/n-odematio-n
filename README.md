@@ -15,7 +15,7 @@ A custom Kubernetes Helm chart for n8n, a Workflow Automation Tool.
     > Ensure port 80 is enabled in firewall.  
     > centos: `sudo firewall-cmd --add-port=80/tcp`
     
-    ![](docs\n8n-add-host.png)
+    ![update host](docs/n8n-add-host.png)
 
 ## References
 1. https://github.com/n8n-io/n8n-eks-cluster
